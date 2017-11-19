@@ -36,24 +36,29 @@ const parseCSV = (fileObj) => {
 const processData = (results) => {
     const columns = results.meta.fields;
     const dailyAppointments = getAppointmentsByDay(results.data);
+    const dailyAppointmentsByLocation = splitDaysByLocation(dailyAppointments);
 
-    /* 
-     * If a day has appointments, split up the monolithic array 
-     * into smaller objects by table
-     * Note: this overwrites the original entry for appointments[day]
-     * into appointments[day][table]
-     */
-    Object.keys(dailyAppointments).forEach((day) => {
-        if(dailyAppointments[day].length > 0){
-            dailyAppointments[day] = splitByTable(dailyAppointments[day]);
-        } else {
-            console.log('No appointments for ', day);
-        }
-    });
+    console.log(dailyAppointmentsByLocation);
 };
 
 /* 
- * Split the monolothic set of appointments by unique location
+ * Restructure a days appointments by location
+ */
+const splitDaysByLocation = (dailyAppointments) => {
+    let processedAppointments = {};
+    Object.keys(dailyAppointments).forEach((day) => {
+        if(dailyAppointments[day].length > 0){
+            processedAppointments[day] = splitByTable(dailyAppointments[day]);
+        } else {
+            console.log('No appointments for ', day);
+            processedAppointments[day] = [];
+        }
+    });
+    return processedAppointments;
+}
+
+/* 
+ * Split a monolothic set of appointments by unique location
  */
 const splitByTable = (appointments) => {
     const unique = [...new Set(appointments.map(apt => apt.meeting_point_name))];

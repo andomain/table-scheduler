@@ -103,11 +103,11 @@ gulp.task('clean:build', () => {
 });
 
 gulp.task('watch', () => {
-	gulp.watch('src/*', ['html', 'patch-bump']);
-	gulp.watch('src/scss/**/*.scss', ['scss', 'patch-bump']);
-	gulp.watch('src/js/**/*.js', ['js', 'test', 'patch-bump']);
-	gulp.watch('src/img/**', ['images', 'patch-bump']);
-	gulp.watch('src/spec/*.js', ['test', 'patch-bump']);
+	gulp.watch('src/*', ['html']);
+	gulp.watch('src/scss/**/*.scss', ['scss']);
+	gulp.watch('src/js/**/*.js', ['js', 'test']);
+	gulp.watch('src/img/**', ['images']);
+	gulp.watch('src/spec/*.js', ['test']);
 });
 
 // Default task

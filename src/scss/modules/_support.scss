@@ -1,0 +1,13 @@
+.support-message {
+	display: none;
+
+	background-color: $error-red;
+	border: 5px solid darken($error-red, 25%);
+	border-radius: 5px;
+
+	text-align: center;
+
+	.fr-unsupported & {
+		display: block;
+	}
+}

@@ -1,6 +1,6 @@
 {
   "name": "table-scheduler",
-  "version": "1.0.3",
+  "version": "1.0.7",
   "description": "A csv parser for Sheffield Doc/Fest",
   "main": "index.js",
   "scripts": {

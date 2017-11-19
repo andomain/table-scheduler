@@ -38,8 +38,36 @@ const processData = (results) => {
     const dailyAppointments = getAppointmentsByDay(results.data);
     const dailyAppointmentsByLocation = splitDaysByLocation(dailyAppointments);
 
-    console.log(dailyAppointmentsByLocation);
+    const paddedAppointments = padAppointments(dailyAppointmentsByLocation);
+
+    console.log(paddedAppointments);
 };
+
+/* 
+ * Pad a day/locations appointments with breaks to ensure a full 9-6 schedule
+ */
+ const padAppointments = (appointments, aptLength = 20, startHour = 9, endHour = 18, startMinute = 0, endMinute = 0) => {
+    Object.keys(appointments).forEach((day) => {
+        Object.keys(appointments[day]).forEach((location) => {
+            // Sort appointments by start time
+            appointments[day][location] = sortByStartTime(appointments[day][location]);
+
+            // Create start/end timestamps for each day/location
+            const dateStamp = convertToDate(appointments[day][location][0].date);
+            const startTime = dateStamp.setHours(startHour, startMinute);
+            const endTime = dateStamp.setHours(endHour, endMinute);  
+        });
+    });
+    return appointments;
+ }
+
+const sortByStartTime = (arr) => {
+    arr.sort((a, b) => {
+        return a.start_time.localeCompare(b.start_time);
+    });
+    return arr;
+}
+
 
 /* 
  * Restructure a days appointments by location

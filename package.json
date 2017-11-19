@@ -1,0 +1,21 @@
+{
+  "name": "table-scheduler",
+  "version": "1.0.0",
+  "description": "A csv parser for Sheffield Doc/Fest",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andomain/table-scheduler.git"
+  },
+  "author": "Sam Anderson <@andomain>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andomain/table-scheduler/issues"
+  },
+  "homepage": "https://github.com/andomain/table-scheduler#readme",
+  "dependencies": {
+  }
+}

@@ -27,7 +27,30 @@ const parseCSV = (fileObj) => {
 };
 
 const processData = (results, files) => {
-    console.log(results);
-}
+    const columns = results.meta.fields;
+    const dailyAppointments = getAppointmentsByDay(results.data);
+    
+    console.log(dailyAppointments);
+};
+
+const getAppointmentsByDay = (dataArr) => {
+    let week = {};
+    for(let i = 0; i < 7; i++){
+        week[i] = getRowsByDay(dataArr, i);
+    }
+    return week;
+};
+
+const getRowsByDay = (results, day) => {
+    return results.filter((row) => {
+        const date = convertToDate(row.date);
+        return date.getDay() === day;
+    });
+};
+
+const convertToDate = (dateString, delim = '/') => {
+    const dateParts = dateString.split(delim);
+    return new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+};
 
 

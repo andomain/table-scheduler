@@ -49,9 +49,6 @@ const processData = (results) => {
  const padAppointments = (appointments, aptLength = 20, startHour = 9, endHour = 18, startMinute = 0, endMinute = 0) => {
     Object.keys(appointments).forEach((day) => {
         Object.keys(appointments[day]).forEach((location) => {
-            // Sort appointments by start time
-            appointments[day][location] = sortByStartTime(appointments[day][location]);
-
             // Create start/end timestamps for each day/location
             const dateStamp = convertToDate(appointments[day][location][0].date);
             const startTime = dateStamp.setHours(startHour, startMinute);
@@ -62,6 +59,7 @@ const processData = (results) => {
  }
 
 const sortByStartTime = (arr) => {
+    console.log(arr);
     arr.sort((a, b) => {
         return a.start_time.localeCompare(b.start_time);
     });
@@ -79,7 +77,6 @@ const splitDaysByLocation = (dailyAppointments) => {
             processedAppointments[day] = splitByTable(dailyAppointments[day]);
         } else {
             console.log('No appointments for ', day);
-            processedAppointments[day] = [];
         }
     });
     return processedAppointments;
@@ -94,6 +91,7 @@ const splitByTable = (appointments) => {
 
     unique.forEach(location => {
         locations[location] = appointments.filter(apt => apt.meeting_point_name === location);
+        locations[location] = sortByStartTime(locations[location]);
     });
     return locations;
 }

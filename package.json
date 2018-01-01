@@ -1,6 +1,6 @@
 {
   "name": "table-scheduler",
-  "version": "1.0.8",
+  "version": "1.0.0",
   "description": "A csv parser for Sheffield Doc/Fest",
   "main": "index.js",
   "scripts": {
@@ -46,6 +46,7 @@
     "webpack-stream": "^3.2.0"
   },
   "dependencies": {
+    "date-fns": "^1.29.0",
     "papaparse": "^4.3.6"
   }
 }

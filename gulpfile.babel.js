@@ -113,7 +113,7 @@ gulp.task('watch', () => {
 // Default task
 // ========================================================================================
 
-gulp.task('default', ['build', 'browser-sync', 'patch-bump'], () => {
+gulp.task('default', ['build', 'browser-sync'], () => {
     gulp.watch(config.paths.scripts.watch, ['scripts:main']);
     gulp.watch(config.paths.styles.watch, ['styles:main']);
     gulp.watch(config.paths.markup.watch, ['html']);

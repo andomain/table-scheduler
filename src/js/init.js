@@ -1,4 +1,5 @@
 import Papa from 'papaparse';
+import { getDay, setHours, setMinutes } from 'date-fns'
 
 const fileInput = document.getElementById('csvFileInput');
 
@@ -35,7 +36,18 @@ const parseCSV = (fileObj) => {
  */
 const processData = (results) => {
     const columns = results.meta.fields;
-    const dailyAppointments = getAppointmentsByDay(results.data);
+
+    // Replace date with JS usable start time 
+    const processed = results.data.map((meeting) => {
+        const {year, month, day} = getDateParts(meeting.date);
+        const [startHour, startMinute] = meeting.start_time.split(/\:/);
+        const startTime = new Date(year, month, day, startHour, startMinute);
+        
+        meeting.date = startTime;
+        return meeting;
+    });
+
+    const dailyAppointments = getAppointmentsByDay(processed);
     const dailyAppointmentsByLocation = splitDaysByLocation(dailyAppointments);
 
     const paddedAppointments = padAppointments(dailyAppointmentsByLocation);
@@ -50,16 +62,17 @@ const processData = (results) => {
     Object.keys(appointments).forEach((day) => {
         Object.keys(appointments[day]).forEach((location) => {
             // Create start/end timestamps for each day/location
-            const dateStamp = convertToDate(appointments[day][location][0].date);
-            const startTime = dateStamp.setHours(startHour, startMinute);
-            const endTime = dateStamp.setHours(endHour, endMinute);  
+            // const dateStamp = getDateParts(appointments[day][location][0].date);
+            // const startTime = dateStamp.setHours(startHour, startMinute);
+            // const endTime = dateStamp.setHours(endHour, endMinute);
+
+            // TO DO: Correctly pad appointments to create full days            
         });
     });
     return appointments;
  }
 
 const sortByStartTime = (arr) => {
-    console.log(arr);
     arr.sort((a, b) => {
         return a.start_time.localeCompare(b.start_time);
     });
@@ -109,26 +122,20 @@ const dayOfWeekAsString = (dayIndex) => {
 const getAppointmentsByDay = (dataArr) => {
     let week = {};
     for(let i = 0; i < 7; i++){
-        week[dayOfWeekAsString(i)] = getRowsByDay(dataArr, i);
+        week[dayOfWeekAsString(i)] = dataArr.filter(row => getDay(row.date) === i);
     }
     return week;
 };
 
 /* 
- * Get appointments by day of the week
+ * Get individual date parts
  */
-const getRowsByDay = (results, day) => {
-    return results.filter((row) => {
-        const date = convertToDate(row.date);
-        return date.getDay() === day;
-    });
-};
-
-/* 
- * Convert the DD/MM/YYYY date from the original CSV into JS date readable
- * format
- */
-const convertToDate = (dateString, delim = '/') => {
+const getDateParts = (dateString, delim = '/') => {
     const dateParts = dateString.split(delim);
-    return new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+    console.log(dateString, dateParts);
+    return {
+        year: dateParts[2],
+        month: dateParts[1] - 1,
+        day: dateParts[0],
+    };
 };

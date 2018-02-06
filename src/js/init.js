@@ -65,9 +65,11 @@ const processData = (results) => {
     const endHour = 18;
     const endMinute = 0;
 
-    Object.keys(appointmentsByLocation).forEach((day) => {
-        const thisDay = day;
+    const finalApts = {};
 
+    Object.keys(appointmentsByLocation).forEach((day) => {
+        finalApts[day] = {};
+        
         Object.keys(appointmentsByLocation[day]).forEach((table) => {
             const filename = `${day.toLowerCase()}-${table.toLowerCase().replace(/\s+/, '_')}`;
             const appointments = appointmentsByLocation[day][table];
@@ -85,20 +87,22 @@ const processData = (results) => {
                         aptIndex++;
                     }
                 } else {
-                    paddedAppointments.push(createDummy(currentTime));
+                    paddedAppointments.push(createDummy(currentTime, aptLength));
                 }
                 currentTime = addMinutes(currentTime, aptLength);
             }
-            console.log(paddedAppointments);
+            finalApts[day][table] = paddedAppointments;
         });
     });
+    console.log(finalApts);
 };
 
-const createDummy = (time) => {
+const createDummy = (time, aptLength) => {
     return {
         title: 'Break',
         date: time,
         start_time: format(time, 'HH:mm'),
+        end_time: format(addMinutes(time, aptLength), 'HH:mm'),
     };
 };
 

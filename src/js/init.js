@@ -1,4 +1,5 @@
 import Papa from 'papaparse';
+import JSZip from 'JSZip';
 import { addMinutes, format, getDay, isBefore, isEqual, setHours, setMinutes } from 'date-fns';
 
 const fileInput = document.getElementById('csvFileInput');
@@ -96,7 +97,37 @@ const processData = (results) => {
     });
     // Could also just create object of {filename: apts}?
     console.log(finalApts);
+    createZip(finalApts);
 };
+
+const createZip = (obj) => {
+    const zip = new JSZip();
+    zip.file("Hello.txt", "Hello World\n");
+    zip.generateAsync({type:"blob"})
+        .then(function(content) {
+            console.log(content);
+            // see FileSaver.js
+            // saveAs(content, "example.zip");
+
+            const url = window.URL.createObjectURL(content);
+      
+            const href = url;
+            const target = '_blank';
+        
+            // target filename
+            const download = 'test.zip';
+
+            const resultContainer = document.getElementById('results-link');
+            const dlLink = document.createElement('a');
+            dlLink.setAttribute('href', url);
+            dlLink.setAttribute('target', target);
+            dlLink.setAttribute('download', download);
+            dlLink.innerHTML='download';
+
+            resultContainer.appendChild(dlLink);
+
+    });
+}
 
 const createDummy = (time, aptLength) => {
     return {
@@ -126,7 +157,7 @@ const cleanObject = (obj) =>  {
 
     const cleanObj = obj;
 
-    // toBeDeleted.forEach( dataKey => delete cleanObj[dataKey] );
+    toBeDeleted.forEach( dataKey => delete cleanObj[dataKey] );
     return cleanObj;
 }
 

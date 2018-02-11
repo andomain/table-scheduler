@@ -95,17 +95,23 @@ const processData = (results) => {
             finalApts[filename] = paddedAppointments;
         });
     });
-    // Could also just create object of {filename: apts}?
-    console.log(finalApts);
     createZip(finalApts);
 };
 
 const createZip = (obj) => {
     const zip = new JSZip();
-    zip.file("Hello.txt", "Hello World\n");
+
+    console.log(obj);
+
+    Object.keys(obj).forEach((file) => {
+        const contents = "a,b,c";
+        zip.file(file, contents);
+    })
+
+    // zip.file("Hello.txt", "Hello World\n");
     zip.generateAsync({type:"blob"})
         .then(function(content) {
-            console.log(content);
+            // console.log(content);
             // see FileSaver.js
             // saveAs(content, "example.zip");
 

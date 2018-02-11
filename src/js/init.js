@@ -35,43 +35,43 @@ const parseCSV = (fileObj) => {
  * Process the parsed results and split into days/tables etc.
  */
 const processData = (results) => {
+
     // Replace date with JS usable start time 
     const processed = results.data.map((meeting) => {
         const {year, month, day} = getDateParts(meeting.date);
         const [startHour, startMinute] = meeting.start_time.split(/\:/);
         
-        meeting.date = new Date(year, month, day, startHour, startMinute);;
+        meeting.date = new Date(year, month, day, startHour, startMinute);
         return meeting;
     });
 
     const week = {};
     
+    // Filter original array into individual days of the week
     for(let i = 0; i < 7; i++){
         week[dayOfWeekAsString(i)] = processed.filter(row => getDay(row.date) === i);
     };
 
-    const appointmentsByLocation = {};
-    Object.keys(week).forEach((day) => {
-        if(week[day].length > 0){
-            appointmentsByLocation[day] = splitByTable(week[day]);
-        } else {
-            console.log('No appointments for ', day);
-        }
-    });
+    // Split days by location
+    const appointmentsByLocation = splitWeekByTable(week);
 
+    // Appointment details
     const aptLength = 20;
     const startHour = 9;
     const startMinute = 0;
     const endHour = 18;
     const endMinute = 0;
 
+    // Initialise final object to hold result
     const finalApts = {};
 
+    // Pad individual day/table combos and create final object
     Object.keys(appointmentsByLocation).forEach((day) => {
-        finalApts[day] = {};
+        // finalApts[day] = {};
         
         Object.keys(appointmentsByLocation[day]).forEach((table) => {
-            const filename = `${day.toLowerCase()}-${table.toLowerCase().replace(/\s+/, '_')}`;
+            const filename = `${day.toLowerCase()}-${table.toLowerCase().replace(/\s+/, '_')}.csv`;
+            // const headers = Object.keys();
             const appointments = appointmentsByLocation[day][table];
             const today = appointments[0].date;
             let currentTime = setTime(today, startHour, startMinute);
@@ -82,7 +82,7 @@ const processData = (results) => {
 
             while(isBefore(currentTime, endTime)){
                 if(isEqual(appointments[aptIndex].date, currentTime)){
-                    paddedAppointments.push(appointments[aptIndex]);
+                    paddedAppointments.push(cleanObject(appointments[aptIndex]));
                     if(aptIndex < appointments.length - 1){
                         aptIndex++;
                     }
@@ -91,9 +91,10 @@ const processData = (results) => {
                 }
                 currentTime = addMinutes(currentTime, aptLength);
             }
-            finalApts[day][table] = paddedAppointments;
+            finalApts[filename] = paddedAppointments;
         });
     });
+    // Could also just create object of {filename: apts}?
     console.log(finalApts);
 };
 
@@ -103,8 +104,32 @@ const createDummy = (time, aptLength) => {
         date: time,
         start_time: format(time, 'HH:mm'),
         end_time: format(addMinutes(time, aptLength), 'HH:mm'),
+        attendee_name: "",
+        attendee_organisation: "",
+        booker_name: "",
+        booker_organisation: "",
+        meeting_point_name: ""
     };
 };
+
+// Remove any unnecessary data
+const cleanObject = (obj) =>  {
+
+    const toBeDeleted = [
+        'attendee_email',
+        'attendee_last_login',
+        'confirmed_time',
+        'created_time',
+        'meeting_id',
+        'meeting_point_id'
+    ]
+
+    const cleanObj = obj;
+
+    // toBeDeleted.forEach( dataKey => delete cleanObj[dataKey] );
+    return cleanObj;
+}
+
 
 const setTime = (time, hour, minute) => {
     return setHours(setMinutes(time, minute), hour);
@@ -115,6 +140,18 @@ const sortByStartTime = (arr) => {
         return a.start_time.localeCompare(b.start_time);
     });
     return arr;
+};
+
+const splitWeekByTable = (week) => {
+    const result = {};
+    Object.keys(week).forEach((day) => {
+        if(week[day].length > 0){
+            result[day] = splitByTable(week[day]);
+        } else {
+            console.log('No appointments for ', day);
+        }
+    });
+    return result;    
 };
 
 /* 

@@ -2,20 +2,6 @@ import Papa from 'papaparse';
 import JSZip from 'JSZip';
 import { addMinutes, format, getDay, isBefore, isEqual, setHours, setMinutes } from 'date-fns';
 
-const finalHeaders = [
-    'meeting_point_name',
-    'date',
-    'start_time',
-    'end_time',
-    'title',
-    'attendee_name',
-    'attendee_organisation',
-    'booker_name',
-    'booker_organisation',
-    'meeting_point_name',
-    'also_attending',
-] 
-
 const fileInput = document.getElementById('csvFileInput');
 
 // Test if FileReader API supported and attach listeners to file input

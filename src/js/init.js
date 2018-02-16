@@ -1,7 +1,19 @@
 import Papa from 'papaparse';
+import JSZip from 'JSZip';
 import { addMinutes, format, getDay, isBefore, isEqual, setHours, setMinutes } from 'date-fns';
 
 const fileInput = document.getElementById('csvFileInput');
+
+const finalHeaders = [
+    'start_time',
+    'end_time',
+    'attendee_name',
+    'attendee_organisation',
+    'booker_name',
+    'booker_organisation',
+    'meeting_point_name',
+    'also_attending',
+];
 
 // Test if FileReader API supported and attach listeners to file input
 if(!window.FileReader) {
@@ -87,28 +99,71 @@ const processData = (results) => {
                         aptIndex++;
                     }
                 } else {
-                    paddedAppointments.push(createDummy(currentTime, aptLength));
+                    paddedAppointments.push(createDummy(currentTime, aptLength, table));
                 }
                 currentTime = addMinutes(currentTime, aptLength);
             }
             finalApts[filename] = paddedAppointments;
         });
     });
-    // Could also just create object of {filename: apts}?
-    console.log(finalApts);
+    createZip(finalApts);
 };
 
-const createDummy = (time, aptLength) => {
+const createZip = (obj) => {
+    const zip = new JSZip();
+
+    console.log(obj);
+
+    Object.keys(obj).forEach((file) => {
+        // Get constant info from first appointment
+        // TO DO: Use date-fns to nicely format date
+        const date = obj[file][0].date
+        const location = obj[file][0].meeting_point_name;
+        const contents = createFinalCSV(date, location, obj[file]);
+        zip.file(file, contents);
+    });
+
+    // zip.file("Hello.txt", "Hello World\n");
+    zip.generateAsync({type:"blob"})
+        .then(function(content) {
+            const url = window.URL.createObjectURL(content);
+            const href = url;
+            const target = '_blank';
+            const download = 'test.zip';
+
+            const resultContainer = document.getElementById('results-link');
+            const dlLink = document.createElement('a');
+
+            dlLink.setAttribute('href', url);
+            dlLink.setAttribute('target', target);
+            dlLink.setAttribute('download', download);
+            dlLink.innerHTML='download';
+
+            resultContainer.appendChild(dlLink);
+    });
+};
+
+const createFinalCSV = (date, location, obj) => {
+    let csv = `${location}\n${date}\n\n${finalHeaders}\n`;
+
+    obj.forEach(row => {
+        // TO DO: Could generate through loop of headers
+        csv += `${row['start_time']}, ${row['end_time']}, ${row['attendee_name']}, ${row['attendee_organisation']}, ${row['booker_name']}, ${row['booker_organisation']}, ${row['meeting_point_name']}, ${row['also_attending']}\n`;
+    });
+    return csv;
+};
+
+const createDummy = (time, aptLength, location) => {
     return {
-        title: 'Break',
         date: time,
         start_time: format(time, 'HH:mm'),
         end_time: format(addMinutes(time, aptLength), 'HH:mm'),
-        attendee_name: "",
+        attendee_name: "Break",
         attendee_organisation: "",
         booker_name: "",
         booker_organisation: "",
-        meeting_point_name: ""
+        meeting_point_name: location,
+        also_attending: "",
     };
 };
 
@@ -122,13 +177,13 @@ const cleanObject = (obj) =>  {
         'created_time',
         'meeting_id',
         'meeting_point_id'
-    ]
+    ];
 
-    const cleanObj = obj;
+    const clean = obj;
 
-    // toBeDeleted.forEach( dataKey => delete cleanObj[dataKey] );
-    return cleanObj;
-}
+    toBeDeleted.forEach( dataKey => delete clean[dataKey] );
+    return clean;
+};
 
 
 const setTime = (time, hour, minute) => {
@@ -148,7 +203,7 @@ const splitWeekByTable = (week) => {
         if(week[day].length > 0){
             result[day] = splitByTable(week[day]);
         } else {
-            console.log('No appointments for ', day);
+            // console.log('No appointments for ', day);
         }
     });
     return result;    

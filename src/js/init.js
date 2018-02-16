@@ -4,19 +4,16 @@ import { addMinutes, format, getDay, isBefore, isEqual, setHours, setMinutes } f
 
 const fileInput = document.getElementById('csvFileInput');
 
-// const finalHeaders = [
-//     'meeting_point_name',
-//     'date',
-//     'start_time',
-//     'end_time',
-//     'title',
-//     'attendee_name',
-//     'attendee_organisation',
-//     'booker_name',
-//     'booker_organisation',
-//     'meeting_point_name',
-//     'also_attending',
-// ];
+const finalHeaders = [
+    'start_time',
+    'end_time',
+    'attendee_name',
+    'attendee_organisation',
+    'booker_name',
+    'booker_organisation',
+    'meeting_point_name',
+    'also_attending',
+];
 
 // Test if FileReader API supported and attach listeners to file input
 if(!window.FileReader) {
@@ -102,7 +99,7 @@ const processData = (results) => {
                         aptIndex++;
                     }
                 } else {
-                    paddedAppointments.push(createDummy(currentTime, aptLength));
+                    paddedAppointments.push(createDummy(currentTime, aptLength, table));
                 }
                 currentTime = addMinutes(currentTime, aptLength);
             }
@@ -118,7 +115,11 @@ const createZip = (obj) => {
     console.log(obj);
 
     Object.keys(obj).forEach((file) => {
-        const contents = createFinalCSV(obj[file]);
+        // Get constant info from first appointment
+        // TO DO: Use date-fns to nicely format date
+        const date = obj[file][0].date
+        const location = obj[file][0].meeting_point_name;
+        const contents = createFinalCSV(date, location, obj[file]);
         zip.file(file, contents);
     });
 
@@ -142,31 +143,27 @@ const createZip = (obj) => {
     });
 };
 
-const createFinalCSV = (obj) => {
-    let csv = '';
-    obj.forEach(row => {
-        let csvLine = '';
-        Object.keys(row).forEach(key => {
-            csvLine += `${row[key]}, `;
-        });
+const createFinalCSV = (date, location, obj) => {
+    let csv = `${location}\n${date}\n\n${finalHeaders}\n`;
 
-        csv += csvLine.replace(/\,\s*$/, '\n');
+    obj.forEach(row => {
+        // TO DO: Could generate through loop of headers
+        csv += `${row['start_time']}, ${row['end_time']}, ${row['attendee_name']}, ${row['attendee_organisation']}, ${row['booker_name']}, ${row['booker_organisation']}, ${row['meeting_point_name']}, ${row['also_attending']}\n`;
     });
-    // console.log(csv);
     return csv;
 };
 
-const createDummy = (time, aptLength) => {
+const createDummy = (time, aptLength, location) => {
     return {
-        title: 'Break',
         date: time,
         start_time: format(time, 'HH:mm'),
         end_time: format(addMinutes(time, aptLength), 'HH:mm'),
-        attendee_name: "",
+        attendee_name: "Break",
         attendee_organisation: "",
         booker_name: "",
         booker_organisation: "",
-        meeting_point_name: ""
+        meeting_point_name: location,
+        also_attending: "",
     };
 };
 

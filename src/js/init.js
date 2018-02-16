@@ -4,6 +4,20 @@ import { addMinutes, format, getDay, isBefore, isEqual, setHours, setMinutes } f
 
 const fileInput = document.getElementById('csvFileInput');
 
+// const finalHeaders = [
+//     'meeting_point_name',
+//     'date',
+//     'start_time',
+//     'end_time',
+//     'title',
+//     'attendee_name',
+//     'attendee_organisation',
+//     'booker_name',
+//     'booker_organisation',
+//     'meeting_point_name',
+//     'also_attending',
+// ];
+
 // Test if FileReader API supported and attach listeners to file input
 if(!window.FileReader) {
     document.body.classList.add('fr-unsupported');
@@ -104,36 +118,43 @@ const createZip = (obj) => {
     console.log(obj);
 
     Object.keys(obj).forEach((file) => {
-        const contents = "a,b,c";
+        const contents = createFinalCSV(obj[file]);
         zip.file(file, contents);
-    })
+    });
 
     // zip.file("Hello.txt", "Hello World\n");
     zip.generateAsync({type:"blob"})
         .then(function(content) {
-            // console.log(content);
-            // see FileSaver.js
-            // saveAs(content, "example.zip");
-
             const url = window.URL.createObjectURL(content);
-      
             const href = url;
             const target = '_blank';
-        
-            // target filename
             const download = 'test.zip';
 
             const resultContainer = document.getElementById('results-link');
             const dlLink = document.createElement('a');
+
             dlLink.setAttribute('href', url);
             dlLink.setAttribute('target', target);
             dlLink.setAttribute('download', download);
             dlLink.innerHTML='download';
 
             resultContainer.appendChild(dlLink);
-
     });
-}
+};
+
+const createFinalCSV = (obj) => {
+    let csv = '';
+    obj.forEach(row => {
+        let csvLine = '';
+        Object.keys(row).forEach(key => {
+            csvLine += `${row[key]}, `;
+        });
+
+        csv += csvLine.replace(/\,\s*$/, '\n');
+    });
+    // console.log(csv);
+    return csv;
+};
 
 const createDummy = (time, aptLength) => {
     return {
@@ -159,13 +180,13 @@ const cleanObject = (obj) =>  {
         'created_time',
         'meeting_id',
         'meeting_point_id'
-    ]
+    ];
 
-    const cleanObj = obj;
+    const clean = obj;
 
-    toBeDeleted.forEach( dataKey => delete cleanObj[dataKey] );
-    return cleanObj;
-}
+    toBeDeleted.forEach( dataKey => delete clean[dataKey] );
+    return clean;
+};
 
 
 const setTime = (time, hour, minute) => {
@@ -185,7 +206,7 @@ const splitWeekByTable = (week) => {
         if(week[day].length > 0){
             result[day] = splitByTable(week[day]);
         } else {
-            console.log('No appointments for ', day);
+            // console.log('No appointments for ', day);
         }
     });
     return result;    

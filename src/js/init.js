@@ -4,7 +4,14 @@ import { addMinutes, format, getDay, isBefore, isEqual, setHours, setMinutes } f
 
 const fileInput = document.getElementById('csvFileInput');
 
-const finalHeaders = [
+// Appointment details
+const aptLength = 20;
+const startHour = 9;
+const startMinute = 0;
+const endHour = 18;
+const endMinute = 0;
+
+const headers = [
     'start_time',
     'end_time',
     'attendee_name',
@@ -67,25 +74,16 @@ const processData = (results) => {
     // Split days by location
     const appointmentsByLocation = splitWeekByTable(week);
 
-    // Appointment details
-    const aptLength = 20;
-    const startHour = 9;
-    const startMinute = 0;
-    const endHour = 18;
-    const endMinute = 0;
-
     // Initialise final object to hold result
     const finalApts = {};
 
     // Pad individual day/table combos and create final object
-    Object.keys(appointmentsByLocation).forEach((day) => {
-        // finalApts[day] = {};
-        
+    Object.keys(appointmentsByLocation).forEach((day) => {        
         Object.keys(appointmentsByLocation[day]).forEach((table) => {
             const filename = `${day.toLowerCase()}-${table.toLowerCase().replace(/\s+/, '_')}.csv`;
-            // const headers = Object.keys();
             const appointments = appointmentsByLocation[day][table];
             const today = appointments[0].date;
+            
             let currentTime = setTime(today, startHour, startMinute);
             const endTime = setTime(today, endHour, endMinute);
 
@@ -112,12 +110,10 @@ const processData = (results) => {
 const createZip = (obj) => {
     const zip = new JSZip();
 
-    console.log(obj);
-
     Object.keys(obj).forEach((file) => {
         // Get constant info from first appointment
         // TO DO: Use date-fns to nicely format date
-        const date = obj[file][0].date
+        const date = format(obj[file][0].date, 'ddd Wo MMM YYYY');
         const location = obj[file][0].meeting_point_name;
         const contents = createFinalCSV(date, location, obj[file]);
         zip.file(file, contents);
@@ -129,7 +125,7 @@ const createZip = (obj) => {
             const url = window.URL.createObjectURL(content);
             const href = url;
             const target = '_blank';
-            const download = 'test.zip';
+            const download = 'schedule.zip';
 
             const resultContainer = document.getElementById('results-link');
             const dlLink = document.createElement('a');
@@ -144,13 +140,13 @@ const createZip = (obj) => {
 };
 
 const createFinalCSV = (date, location, obj) => {
-    let csv = `${location}\n${date}\n\n${finalHeaders}\n`;
+    let csv = `${location}\n${date}\n\n${headers}\n`;
 
     obj.forEach(row => {
-        // TO DO: Could generate through loop of headers
         csv += `${row['start_time']}, ${row['end_time']}, ${row['attendee_name']}, ${row['attendee_organisation']}, ${row['booker_name']}, ${row['booker_organisation']}, ${row['meeting_point_name']}, ${row['also_attending']}\n`;
     });
-    return csv;
+
+    return csv.replace(/\,\s+$/, '\n');
 };
 
 const createDummy = (time, aptLength, location) => {

@@ -8,8 +8,6 @@ import cleanCss from 'gulp-clean-css';
 import concat from 'gulp-concat';
 import eslint from 'gulp-eslint'
 import gulp from 'gulp';
-import imagemin from 'gulp-imagemin';
-import pump from 'pump';
 import rename from 'gulp-rename';
 import scss from 'gulp-sass';
 import sourcemaps from 'gulp-sourcemaps';
@@ -43,18 +41,6 @@ gulp.task('scripts:main', () => {
 })
 
 /**
- * Handle any 3rd party scripts
- */
-gulp.task('scripts:vendor', () => {
-    pump([
-        gulp.src(bundles.vendor.scripts),
-        concat('vendor.bundle.min.js'),
-        uglify(),
-        gulp.dest(config.paths.scripts.dest)
-    ]);
-});
-
-/**
  * Handle SCSS
  */
 gulp.task('styles:main', () => {
@@ -79,12 +65,6 @@ gulp.task('styles:vendor', () => {
     .pipe(gulp.dest(config.paths.styles.dest));
 });
 
-gulp.task('images', () => {
-	return gulp.src(config.paths.images.source)
-		.pipe(imagemin())
-		.pipe(gulp.dest(config.paths.images.dest));
-});
-
 /**
  * Currently no templating used but this is
  * where it would be applied
@@ -106,8 +86,6 @@ gulp.task('watch', () => {
 	gulp.watch('src/*', ['html']);
 	gulp.watch('src/scss/**/*.scss', ['scss']);
 	gulp.watch('src/js/**/*.js', ['js', 'test']);
-	gulp.watch('src/img/**', ['images']);
-	gulp.watch('src/spec/*.js', ['test']);
 });
 
 // Default task
@@ -117,10 +95,9 @@ gulp.task('default', ['build', 'browser-sync'], () => {
     gulp.watch(config.paths.scripts.watch, ['scripts:main']);
     gulp.watch(config.paths.styles.watch, ['styles:main']);
     gulp.watch(config.paths.markup.watch, ['html']);
-    gulp.watch(config.paths.images.watch, ['images']);
 });
 
-gulp.task('build', ['scripts:main', 'styles:main', 'scripts:vendor', 'styles:vendor', 'images', 'html']);
+gulp.task('build', ['scripts:main', 'styles:main', 'styles:vendor', 'html']);
 
 // Utilities
 // ========================================================================================

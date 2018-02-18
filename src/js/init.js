@@ -112,7 +112,6 @@ const createZip = (obj) => {
 
     Object.keys(obj).forEach((file) => {
         // Get constant info from first appointment
-        // TO DO: Use date-fns to nicely format date
         const date = format(obj[file][0].date, 'ddd Wo MMM YYYY');
         const location = obj[file][0].meeting_point_name;
         const contents = createFinalCSV(date, location, obj[file]);

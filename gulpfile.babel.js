@@ -4,7 +4,6 @@ import autoprefixer from 'gulp-autoprefixer';
 import browserSync from 'browser-sync'
 import bump from 'gulp-bump';
 import clean from 'gulp-clean';
-import cleanCss from 'gulp-clean-css';
 import concat from 'gulp-concat';
 import eslint from 'gulp-eslint'
 import gulp from 'gulp';
@@ -61,7 +60,6 @@ gulp.task('styles:main', () => {
 gulp.task('styles:vendor', () => {
     return gulp.src(bundles.vendor.styles)
     .pipe(concat('vendor.bundle.min.css'))
-    .pipe(cleanCss())
     .pipe(gulp.dest(config.paths.styles.dest));
 });
 

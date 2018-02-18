@@ -93,7 +93,7 @@ gulp.task('clean:build', () => {
 
 gulp.task('watch', () => {
 	gulp.watch('src/*', ['html']);
-	gulp.watch('src/scss/**/*.scss', ['scss']);
+	gulp.watch(gulp.config.paths.styles.watch, ['scss']);
 	gulp.watch('src/js/**/*.js', ['js', 'test']);
 });
 

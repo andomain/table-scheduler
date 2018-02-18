@@ -1,0 +1,33 @@
+.FileUpload {
+	position: relative;
+	overflow: hidden;
+	display: inline-block;
+
+	&__Button {
+		appearance: none;
+		cursor: pointer;
+		background: $pomegranite;
+		border: none;
+		border-radius: 5px;
+		color: $black;
+		font-size: 25px;	
+		padding: 10px 15px;
+		z-index: 999;
+
+		transition: background .5s ease;
+
+		&:hover {
+			background: $pomegranite-hover
+		}
+	}
+
+	&__Label,
+	&__Input {
+		font-size: 100px;
+		position: absolute;
+		pointer-events: none;
+		left: 0;
+		top: 0;
+		opacity: 0;
+	}
+}

@@ -24,7 +24,7 @@ const headers = [
 
 // Test if FileReader API supported and attach listeners to file input
 if(!window.FileReader) {
-    document.body.classList.add('fr-unsupported');
+    document.getElementById('support-message').classList.add('display');
 } else {
     fileInput.addEventListener('change', () => handleFileUpload());
 }
@@ -58,6 +58,7 @@ const parseCSV = (fileObj) => {
         },
         error: (error, file) => {
             console.log('Error:', error, file);
+            document.getElementById('error-message').classList.add('display');
         }
     });
 };

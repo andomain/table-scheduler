@@ -1,4 +1,4 @@
-.support-message {
+.error {
 	display: none;
 
 	background-color: $pomegranite;
@@ -9,7 +9,7 @@
 
 	margin-bottom: 50px;
 
-	.fr-unsupported & {
+	&.display {
 		display: block;
 	}
 }

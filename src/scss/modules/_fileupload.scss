@@ -1,4 +1,5 @@
 .FileUpload {
+	margin-bottom: 50px;
 	position: relative;
 	overflow: hidden;
 	display: inline-block;
@@ -16,18 +17,23 @@
 
 		transition: background .5s ease;
 
-		&:hover {
-			background: $pomegranite-hover
-		}
+		// Hover controlled by hidden form elements
+		// &:hover {
+		// 	background: $pomegranite-hover
+		// }
 	}
 
 	&__Label,
 	&__Input {
+		cursor: pointer;
 		font-size: 100px;
 		position: absolute;
-		pointer-events: none;
 		left: 0;
 		top: 0;
 		opacity: 0;
+
+		&:hover + button {
+			background: $pomegranite-hover;
+		}
 	}
 }

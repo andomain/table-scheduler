@@ -77,6 +77,12 @@ gulp.task('img', () => {
         .pipe(gulp.dest(config.paths.images.dest));
 });
 
+
+gulp.task('fonts', () => {
+    return gulp.src(config.paths.fonts.source)
+        .pipe(gulp.dest(config.paths.fonts.dest));
+});
+
 /**
  * Clean the dist dir
  */
@@ -100,7 +106,7 @@ gulp.task('default', ['build', 'browser-sync'], () => {
     gulp.watch(config.paths.markup.watch, ['html']);
 });
 
-gulp.task('build', ['scripts:main', 'styles:main', 'styles:vendor', 'html', 'img']);
+gulp.task('build', ['scripts:main', 'styles:main', 'styles:vendor', 'html', 'img', 'fonts']);
 
 // Utilities
 // ========================================================================================

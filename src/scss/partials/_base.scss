@@ -19,5 +19,42 @@ $header-font-weight: $bold;
 
 // Colours
 $error-red: #FF6666;
+$pomegranite: #FB381D;
+
+// Containers 
+$desk-width: 600px;
+
+@font-face {
+    font-family: latoLight;
+    src: url('../fonts/Lato-Light.ttf');
+}
+
+@font-face {
+    font-family: latoReg;
+    src: url('../fonts/Lato-Regular.ttf');
+}
+
+a {
+	color: #fff;
+	text-decoration: underline;
+}
+
+.container {
+	font-family: latoReg;
+	margin: 0 auto;
+	max-width: $desk-width;
+	padding: 50px 0;
+	width: 100%;
+}
+
+.logo {
+	display: block;
+	margin: 0 auto 50px;
+	width: 25%;
+}
+
+.title {
+	margin-bottom: 0 0 50px;
+}
 
 @import "../modules/all";

@@ -1,1 +1,19 @@
+.container {
+	margin: 0 auto;
+	max-width: $desk-width;
+	padding: 50px 0;
+	width: 100%;
+}
+
+.logo {
+	display: block;
+	margin: 0 auto 50px;
+	width: 35%;
+}
+
+.title {
+	margin-bottom: 0 0 50px;
+}
+
 @import "./support";
+@import "./fileupload";

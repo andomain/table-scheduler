@@ -10,6 +10,11 @@ module.exports = {
 			source: './src/img/*.{png,gif,jpg,jpeg,svg}',
 			dest: './dist/img',
 		},
+		fonts: {
+			watch: './src/fonts/*',
+			source: './src/fonts/*',
+			dest: './dist/fonts',
+		},
 		scripts: {
 			watch: './src/js/**/*.js',
 			source: './src/js/**/*.js',

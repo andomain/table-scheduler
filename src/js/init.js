@@ -29,10 +29,19 @@ if(!window.FileReader) {
     fileInput.addEventListener('change', () => handleFileUpload());
 }
 
+const displayLoader = () => {
+    console.log('Display a loader?');
+};
+
+const removeLoader = () => {
+    console.log('Remove the loader?');
+};
+
 /* 
  * Handle adding of a file
  */
 const handleFileUpload = () => {
+    displayLoader();
     const selectedFile = fileInput.files[0];
     parseCSV(selectedFile);
 };
@@ -43,7 +52,10 @@ const handleFileUpload = () => {
 const parseCSV = (fileObj) => {
     Papa.parse(fileObj, {
         header: true,
-        complete: (results, file) => processData(results),
+        complete: (results, file) => {
+            removeLoader();
+            processData(results);
+        },
         error: (error, file) => {
             console.log('Error:', error, file);
         }
@@ -112,7 +124,6 @@ const createZip = (obj) => {
 
     Object.keys(obj).forEach((file) => {
         // Get constant info from first appointment
-        // TO DO: Use date-fns to nicely format date
         const date = format(obj[file][0].date, 'ddd Wo MMM YYYY');
         const location = obj[file][0].meeting_point_name;
         const contents = createFinalCSV(date, location, obj[file]);
@@ -130,10 +141,11 @@ const createZip = (obj) => {
             const resultContainer = document.getElementById('results-link');
             const dlLink = document.createElement('a');
 
+            dlLink.classList.add('download');
             dlLink.setAttribute('href', url);
             dlLink.setAttribute('target', target);
             dlLink.setAttribute('download', download);
-            dlLink.innerHTML='download';
+            dlLink.innerHTML='Download Schedule';
 
             resultContainer.appendChild(dlLink);
     });

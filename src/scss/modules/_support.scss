@@ -1,11 +1,13 @@
 .support-message {
 	display: none;
 
-	background-color: $error-red;
-	border: 5px solid darken($error-red, 25%);
+	background-color: $pomegranite;
+	border: 5px solid darken($pomegranite, 25%);
 	border-radius: 5px;
 
 	text-align: center;
+
+	margin-bottom: 50px;
 
 	.fr-unsupported & {
 		display: block;

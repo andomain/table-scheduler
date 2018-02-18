@@ -5,19 +5,23 @@
 	<link rel="stylesheet" media="all" href="styles/style.min.css">
 </head>
 <body>
-	<h1>DocFest Meet Market table scheduler</h1>
-	<div class="support-message">
-		<p>Unfortunately you are using an unsupported browser.</p>
-		<p>Please consider using a more up to date version such as <a href="https://www.google.com/chrome/index.html">Google Chrome</a></p>
-	</div>
-	<div class="main-form">
-		<label for="csvFileInput">Please specify a CSV file</label>
-		<input type="file" id="csvFileInput" accept=".csv">
-	</div>
-	<div id="results-link">
-		
+	<div class="container">
+		<img class="logo" src="./img/logo.png" alt="">
+		<h1 class="title">Meet Market Table Schedule</h1>
+		<div class="support-message">
+			<p>Unfortunately you are using an unsupported browser.</p>
+			<p>Please consider using a more up to date version such as <a href="https://www.google.com/chrome/index.html">Google Chrome</a></p>
+		</div>
+		<div class="FileUpload">
+			<label class="FileUpload__Label vh" for="csvFileInput">Please specify a CSV file</label>
+			<input class="FileUpload__Input" type="file" id="csvFileInput" accept=".csv">
+			<button class="FileUpload__Button">Upload CSV</button>
+		</div>
+		<div id="results-link">
+
+		</div>
 	</div>
 
-<script type="text/javascript" src="scripts/app.bundle.js"></script>
+	<script type="text/javascript" src="scripts/app.bundle.js"></script>
 </body>
 </html>

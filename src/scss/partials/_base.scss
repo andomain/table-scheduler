@@ -18,6 +18,34 @@ $fixed-line-height: $base-line-height;
 $header-font-weight: $bold;
 
 // Colours
+$black: #020202;
+$white: #F2F2F2;
 $error-red: #FF6666;
+$pomegranite: #FB381D;
+$pomegranite-hover: #FC7435;
+
+// Containers 
+$desk-width: 600px;
+
+// @font-face {
+//     font-family: reg;
+//     src: url('../fonts/Lato-Light.ttf');
+// }
+
+// @font-face {
+//     font-family: latoReg;
+//     src: url('../fonts/Lato-Regular.ttf');
+// }
+
+body {
+	background: $white;
+	font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+	text-align: center;
+}
+
+a {
+	color: $black;
+	text-decoration: underline;
+}
 
 @import "../modules/all";

@@ -1,22 +1,3 @@
-// Font weights
-$light: 100;
-$regular: 400;
-$bold: 600;
-
-// Base Font
-$base-font-family: sans-serif;
-$base-font-weight: $regular;
-$base-font-size: 13px;
-$base-line-height: 1.4;
-
-// Fixed Font
-$fixed-font-family: monospace;
-$fixed-font-size: 85%;
-$fixed-line-height: $base-line-height;
-
-// Headings
-$header-font-weight: $bold;
-
 // Colours
 $black: #020202;
 $white: #F2F2F2;
@@ -26,16 +7,6 @@ $pomegranite-hover: #FC7435;
 
 // Containers 
 $desk-width: 600px;
-
-// @font-face {
-//     font-family: reg;
-//     src: url('../fonts/Lato-Light.ttf');
-// }
-
-// @font-face {
-//     font-family: latoReg;
-//     src: url('../fonts/Lato-Regular.ttf');
-// }
 
 body {
 	background: $white;

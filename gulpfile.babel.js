@@ -111,9 +111,22 @@ gulp.task('build', ['scripts:main', 'styles:main', 'styles:vendor', 'html', 'img
 // Utilities
 // ========================================================================================
 
-gulp.task('patch-bump', () => {
-    var stuff = gulp.src('./package.json')
-        .pipe(bump({type:'patch'}))
-        .pipe(gulp.dest('./'))
-    return stuff;
-});
+gulp.task('minor', ['build', 'minorBump'], () => {
+    // patchBump('minor');
+    const info = require('./package.json');
+
+    gulp.src(['dist/**', './package.json'])
+        .pipe(gulp.dest('./package/' + info.version));
+})
+
+gulp.task('minorBump', () => {
+        return gulp.src('./package.json')
+        .pipe(bump({type: 'minor'}))
+        .pipe(gulp.dest('./'));
+})
+
+const patchBump = (type = 'patch') => {
+    return gulp.src('./package.json')
+        .pipe(bump({type: type}))
+        .pipe(gulp.dest('./'));
+};

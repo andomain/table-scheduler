@@ -74,7 +74,9 @@ const processData = (results) => {
         const [startHour, startMinute] = meeting.start_time.split(/\:/);
         
         meeting.date = new Date(year, month, day, startHour, startMinute);
-        return meeting;
+        const cleaned = cleanObject(meeting);
+        console.log('CLEAN: ', cleaned);
+        return cleaned;
     });
 
     const week = {};
@@ -105,7 +107,8 @@ const processData = (results) => {
 
             while(isBefore(currentTime, endTime)){
                 if(isEqual(appointments[aptIndex].date, currentTime)){
-                    paddedAppointments.push(cleanObject(appointments[aptIndex]));
+                    // paddedAppointments.push(cleanObject(appointments[aptIndex]));
+                    paddedAppointments.push(appointments[aptIndex]);
                     if(aptIndex < appointments.length - 1){
                         aptIndex++;
                     }

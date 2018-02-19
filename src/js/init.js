@@ -75,7 +75,6 @@ const processData = (results) => {
         
         meeting.date = new Date(year, month, day, startHour, startMinute);
         const cleaned = cleanObject(meeting);
-        console.log('CLEAN: ', cleaned);
         return cleaned;
     });
 
@@ -107,7 +106,6 @@ const processData = (results) => {
 
             while(isBefore(currentTime, endTime)){
                 if(isEqual(appointments[aptIndex].date, currentTime)){
-                    // paddedAppointments.push(cleanObject(appointments[aptIndex]));
                     paddedAppointments.push(appointments[aptIndex]);
                     if(aptIndex < appointments.length - 1){
                         aptIndex++;

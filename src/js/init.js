@@ -30,11 +30,11 @@ if(!window.FileReader) {
 }
 
 const displayLoader = () => {
-    console.log('Display a loader?');
+    // console.log('Display a loader?');
 };
 
 const removeLoader = () => {
-    console.log('Remove the loader?');
+    // console.log('Remove the loader?');
 };
 
 /* 
@@ -56,6 +56,7 @@ const parseCSV = (fileObj) => {
             removeLoader();
             processData(results);
         },
+        skipEmptyLines: true,
         error: (error, file) => {
             console.log('Error:', error, file);
             document.getElementById('error-message').classList.add('display');
@@ -67,7 +68,6 @@ const parseCSV = (fileObj) => {
  * Process the parsed results and split into days/tables etc.
  */
 const processData = (results) => {
-
     // Replace date with JS usable start time 
     const processed = results.data.map((meeting) => {
         const {year, month, day} = getDateParts(meeting.date);
@@ -91,7 +91,7 @@ const processData = (results) => {
     const finalApts = {};
 
     // Pad individual day/table combos and create final object
-    Object.keys(appointmentsByLocation).forEach((day) => {        
+    Object.keys(appointmentsByLocation).forEach((day) => {  
         Object.keys(appointmentsByLocation[day]).forEach((table) => {
             const filename = `${day.toLowerCase()}-${table.toLowerCase().replace(/\s+/, '_')}.csv`;
             const appointments = appointmentsByLocation[day][table];
@@ -117,6 +117,7 @@ const processData = (results) => {
             finalApts[filename] = paddedAppointments;
         });
     });
+
     createZip(finalApts);
 };
 
@@ -125,7 +126,7 @@ const createZip = (obj) => {
 
     Object.keys(obj).forEach((file) => {
         // Get constant info from first appointment
-        const date = format(obj[file][0].date, 'ddd Wo MMM YYYY');
+        const date = format(obj[file][0].date, 'ddd Do MMM YYYY');
         const location = obj[file][0].meeting_point_name;
         const contents = createFinalCSV(date, location, obj[file]);
         zip.file(file, contents);

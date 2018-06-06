@@ -108,6 +108,11 @@ gulp.task('default', ['build', 'browser-sync'], () => {
 
 gulp.task('build', ['scripts:main', 'styles:main', 'styles:vendor', 'html', 'img', 'fonts']);
 
+gulp.task('package', ['build'], () => {
+    gulp.src('dist/**/*')
+        .pipe(gulp.dest('release/.'))
+})
+
 // Utilities
 // ========================================================================================
 

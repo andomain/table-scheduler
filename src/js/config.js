@@ -15,4 +15,4 @@ export const APT = {
     startMinute : 0,
     endHour : 18,
     endMinute : 0,
-}
+};
